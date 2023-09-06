@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-To use these examples, install the necessary packages using `python3 -m pip install -r requirements.txt`.
+To use these examples, install the necessary packages in a clean virtual environment running python version 3.9.2 or greater with the command `python3 -m pip install -r requirements.txt`.
 Each example is placed in a distinct jupyter notebook. There are assisting modules, such as `helpers.py` and
 `data.py` which contain code and data necessary to utilize the examples, but are not explicitly defined
 in the notebooks for clarity purposes. Examine these modules for to see how problems are modeled or visualized.
