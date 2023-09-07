@@ -1,0 +1,73 @@
+Understanding the math for the two-qubit example
+
+QUBO is 0 and 1
+
+Ising is -1 and 1
+
+The formula to relate them is 
+
+Ising = 2 Qubo - 1
+
+Solving for QUBO,
+
+Qubo = 0.5 (Ising + 1)
+
+Now, we're going to look at the two-qubit problem for which the opposite 
+Qubo values (0 and 1, and 1 and 0) have lower energy than the solutions 
+which have the same Qubo values (0 and 0, 1 and 1)
+
+For this two-qubit problem, the objective is
+
+Objective = 2 x y - x - y                                       (1)
+
+Testing it,
+
+X = 0, Y = 0, Qubo = 0
+X = 1, Y = 0, Qubo = -1
+X = 0, Y = 1, Qubo = -1
+X = 1, Y = 1, Qubo = 0
+
+which confirms that the two opposite Qubo solutions (0 and 1, 1 and 0) 
+have lower energy.
+
+We now convert to Ising, but making the substitution of the variable 
+conversion (equation (1) above) into the Objective:
+
+2 (0.5) (I + 1) (0.5) (J + 1) - 0.5 (I + 1) - 0.5 (J + 1)
+0.5 (I + J + IJ + 1) - 0.5 I - 0.5 - 0.5 J - 0.5
+0.5 I + 0.5 J + 0.5 IJ + 0.5 - 0.5 I - 0.5 - 0.5 J - 0.5
+0.5 IJ  - 0.5
+
+The resulting Ising model is:
+
+Objective = 0.5 IJ - 0.5                             (2)
+
+where I and J are Ising variables.
+
+Testing the solution,
+
+I = -1 J = -1 energy = 0
+I = 1 J = -1 energy = -1
+I = -1 J = 1 energy = -1
+I = -1 J = -1 energy = 0
+
+Now we need to put the Ising model objective into the Hamiltonian form
+needed by the EQC1. The linear terms go downward in the first column, and 
+then we put in the diagonal quadratic terms and off-diagonal quadratic terms.
+
+The matrix should look like:
+
+0.  0   0.25
+0.  0.25   0
+
+Thus, the needed Hamiltonian is:
+
+(0, 2) = 0.25
+(1, 1) = 0.25
+
+Notice when these are added, they sum to the off-diagonal term 0.5 IJ.
+
+Checking the solutions
+
+The computer should find the solutions (1, -1) and (-1, 1), and they both
+should have energy -0.5. The solutions should appear with equal probability.

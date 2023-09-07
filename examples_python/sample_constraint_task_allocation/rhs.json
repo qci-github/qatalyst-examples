@@ -1,0 +1,15 @@
+{
+    "data": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+    ],
+    "file_name": "task_allocation_rhs.json",
+    "file_type": "rhs",
+    "num_constraints": 8
+}
