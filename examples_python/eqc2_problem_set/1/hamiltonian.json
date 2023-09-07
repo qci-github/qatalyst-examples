@@ -1,0 +1,17 @@
+{
+    "data": [
+        {
+            "i": 0,
+            "j": 1,
+            "val": 1.0
+        },
+        {
+            "i": 1,
+            "j": 2,
+            "val": 2.0
+        }
+    ],
+    "file_name": "hamiltonian.json",
+    "num_variables": 2,
+    "file_type": "hamiltonian"
+}

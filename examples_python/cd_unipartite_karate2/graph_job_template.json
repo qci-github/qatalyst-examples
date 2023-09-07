@@ -1,0 +1,7 @@
+        {
+          "job_name": "test-job",
+          "job_tags": [
+        		"foo",
+        		"bar"
+        	]
+        }

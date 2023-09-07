@@ -1,0 +1,78 @@
+Understanding the math for the three-qubit example
+
+QUBO is 0 and 1
+
+Ising is -1 and 1
+
+The formula to relate them is 
+
+Ising = 2 Qubo - 1
+
+Solving for QUBO,
+
+Qubo = 0.5 (Ising + 1)
+
+Now, we're going to look at the three-qubit problem for which there are ONE or
+ZERO 1's in the solution.
+That is, we want to favor the solutions (0, 0, 0), (1, 0, 0), (0, 1, 0),
+and (0, 0, 1), and we want to penalize the solutions (1, 1, 0), (1, 0, 1),
+(0, 1, 1) and (1, 1, 1).
+
+For this three-qubit problem, the objective is
+
+Objective = x y + x z + y z                                       (1)
+
+Testing it,
+
+X = 0, Y = 0, Z = 0, Qubo = 0
+X = 1, Y = 0, Z = 0, Qubo = 0
+X = 0, Y = 1, Z = 0, Qubo = 0
+X = 0, Y = 0, Z = 1, Qubo = 0
+X = 1, Y = 1, Z = 0, Qubo = 1
+X = 1, Y = 0, Z = 1, Qubo = 1
+X = 0, Y = 1, Z = 1, Qubo = 1
+X = 1, Y = 1, Z = 1, Qubo = 3
+
+which confirms that the four Qubo solutions with 0 or 1 1's have lower
+energy than the other Qubo solutions.
+
+We now convert to Ising, but making the substitution of the variable 
+conversion (equation (1) above) into the Objective:
+
+(0.5) (I + 1) (0.5) (J + 1) + (0.5)(I + 1)(K + 1) + (0.5)(J + 1)(K + 1)
+0.25 [ I + J + IJ + 1 + I + K + IK + 1 + J + K + JK + 1]
+0.25 [ 2I + 2J + 2K + IJ + IK + JK + 3]
+
+The resulting Ising model is:
+
+Objective = 0.5 I + 0.5 J + 0.5 K + 0.25 IJ + 0.25 IK + 0.25 JK + 0.75
+
+where I and J and K are Ising variables.
+
+Now we need to put the Ising model objective into the Hamiltonian form
+needed by the EQC1. The linear terms go downward in the first column, and 
+then we put in the diagonal quadratic terms and off-diagonal quadratic terms.
+
+The matrix should look like:
+
+0.5  0      0.125 0.125
+0.5  0.125    0   0.125
+0.5  0.125  0.125   0
+
+Thus, the needed Hamiltonian is:
+
+(0, 0) = 0.5
+(1, 0) = 0.5
+(2, 0) = 0.5
+(0, 2) = 0.125
+(0, 3) = 0.125
+(1, 1) = 0.125
+(1, 3) = 0.125
+(2, 1) = 0.125
+(2, 2) = 0.125
+
+Checking the solutions
+
+The computer should find the solutions (-1, -1, -1) and (1, -1, -11), 
+and (-1, 1, -1), and (-1, -1, 1), and they all should have energy -0.75. The 
+solutions should appear with equal probability.
