@@ -74,7 +74,7 @@ def assignment_from_solution(solution, n):
 
 def create_qap_objective(A, B, C, n, num_variables):
     objective_data = []
-    objective = dict()
+    objective = np.zeros((n**2, n**2), dtype=np.float32)
     for i in range(n):
         for k in range(n):
             for j in range(n):
@@ -83,13 +83,13 @@ def create_qap_objective(A, B, C, n, num_variables):
                     key1 = (i*n+k, j*n+l)
                     key2 = (j*n+l, i*n+k)
                     if i == j and k == l:
-                        objective[key1] = objective.get(key1, 0) + float(C[i, k])
+                        objective[key1] += float(C[i, k])
                     else:
-                        objective[key1] = objective.get(key1, 0) + float(A[i, j] * B[k, l] / 2)
+                        objective[key1] += float(A[i, j] * B[k, l] / 2)
                         objective[key2] = objective[key1]
-    objective_data = [{"i": i, "j": j, "val": val} for (i, j), val in objective.items() if val != 0.0]
-    objective_file = {"file_type": "objective", "file_name": "qap_01_obj.json", 
-                    "data": objective_data, "num_variables": num_variables}
+    
+    objective_file = {"file_name": "qap_01_obj", 
+                      "file_config": {"objective": {"data": objective, "num_variables": num_variables}}}
     return objective_file
 
 def create_qap_constraints(n):
@@ -98,15 +98,30 @@ def create_qap_constraints(n):
         for j in range(n):
             constraints[i, i * n + j] = 1
             constraints[n + i, i + n * j] = 1
-    rhs = np.ones((2*n,))
-    constraint_data = []
-    for i in range(constraints.shape[0]):
-        for j in range(constraints.shape[1]):
-            if constraints[i, j] != 0:
-                constraint_data.append({"i": i, "j": j, "val": float(constraints[i, j])})
-    rhs_data = rhs.tolist()
+    # The RUS is negative because Qatalyst expects the constraints to be
+    # Ax - b = 0
+    rhs = -1 * np.ones((2*n,1))
+    constraints = np.hstack([constraints, rhs])
+    constraints_file = {"file_name": "qap_constraints",
+                        "file_config": {"constraints": {"data": constraints, 
+                                                        "num_variables": n**2,
+                                                        "num_constraints": 2*n
+                                                        }}}
+    return constraints_file
 
-    return constraint_data, rhs_data
+def get_results(response):
+    if "results" in response and response["results"] is not None:
+        results_file_config = response["results"]["file_config"]
+        # results file config has one key, named by the job type detail
+        assert len(results_file_config) == 1, "Unknown results format"
+        results = list(results_file_config.values())[0]
+    else:
+        if "job_info" in response and "job_result" in response["job_info"]:
+            details = response["job_info"]["job_result"]
+        else:
+            details = None
+        raise RuntimeError(f"Execution failed. See details: {details}")
+    return results
 
 def find_index_of_nearest(array, value):
     array = np.asarray(array)
