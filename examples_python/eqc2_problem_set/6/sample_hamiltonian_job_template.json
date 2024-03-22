@@ -1,8 +1,0 @@
-        {
-          "job_name": "test-job",
-          "job_tags": [
-        		"foo",
-        		"bar"
-        	],
-        	"hamiltonian_file_id": "HAMILTONIAN_FILE_ID"
-        }
