@@ -1,4 +1,5 @@
-# Examples on using Qatalyst from QCI
+# DEPRECATED 
+This repository is no longer supported and does not represent current methods to access QCi hardware over the cloud service.
 
 ## Getting Started
 
